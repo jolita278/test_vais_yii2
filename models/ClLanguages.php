@@ -12,6 +12,7 @@ use Yii;
  * @property string $updated_at
  * @property string $deleted_at
  * @property string $code
+ * @property string $name
  *
  * @property BreedGroupTranslations[] $breedGroupTranslations
  * @property BreedTranslations[] $breedTranslations
@@ -36,9 +37,10 @@ class ClLanguages extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['created_at', 'updated_at', 'deleted_at'], 'safe'],
-            [['code'], 'required'],
+          //  [['created_at', 'updated_at', 'deleted_at'], 'safe'],
+            [['code', 'name'], 'required'],
             [['code'], 'string', 'max' => 2],
+            [['name'], 'string', 'max' => 45],
             [['code'], 'unique'],
         ];
     }
@@ -54,6 +56,7 @@ class ClLanguages extends \yii\db\ActiveRecord
             'updated_at' => Yii::t('app', 'Updated At'),
             'deleted_at' => Yii::t('app', 'Deleted At'),
             'code' => Yii::t('app', 'Code'),
+            'name' => Yii::t('app', 'Name'),
         ];
     }
 

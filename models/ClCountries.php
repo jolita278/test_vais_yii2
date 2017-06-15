@@ -33,7 +33,7 @@ class ClCountries extends \yii\db\ActiveRecord
     {
         return [
             [['id'], 'required'],
-            [['created_at', 'updated_at', 'deleted_at'], 'safe'],
+           // [['created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['id'], 'string', 'max' => 36],
             [['id'], 'unique'],
             [['id'], 'unique'],

@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\ClLanguages */
 
-$this->title = $model->count;
+$this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Cl Languages'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -33,6 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'updated_at',
             'deleted_at',
             'code',
+            'name',
         ],
     ]) ?>
 

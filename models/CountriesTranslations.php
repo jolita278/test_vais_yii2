@@ -32,12 +32,12 @@ class CountriesTranslations extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['created_at'], 'safe'],
+           // [['created_at'], 'safe'],
             [['language_code'], 'string', 'max' => 2],
-            [['contry_id'], 'string', 'max' => 36],
+            [['country_id'], 'string', 'max' => 36],
             [['name'], 'string', 'max' => 255],
             [['language_code'], 'exist', 'skipOnError' => true, 'targetClass' => ClLanguages::className(), 'targetAttribute' => ['language_code' => 'code']],
-            [['contry_id'], 'exist', 'skipOnError' => true, 'targetClass' => ClCountries::className(), 'targetAttribute' => ['contry_id' => 'id']],
+            [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => ClCountries::className(), 'targetAttribute' => ['country_id' => 'id']],
         ];
     }
 

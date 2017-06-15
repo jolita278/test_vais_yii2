@@ -7,9 +7,9 @@ use yii\helpers\Html;
 
 $this->title = Yii::t('app', 'Update {modelClass}: ', [
     'modelClass' => 'Cl Languages',
-]) . $model->count;
+]) . $model->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Cl Languages'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->count, 'url' => ['view', 'id' => $model->count]];
+$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->count]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
 <div class="cl-languages-update">
