@@ -2,12 +2,17 @@
 
 namespace app\controllers;
 
+use app\models\CountriesTranslations;
 use Yii;
 use app\models\ClCountries;
+use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
+use yii\widgets\ActiveForm;
 
 /**
  * ClCountriesController implements the CRUD actions for ClCountries model.
@@ -51,8 +56,11 @@ class ClCountriesController extends Controller
      */
     public function actionView($id)
     {
+        $modelClCountries = $this->findModel($id);
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $modelClCountries,
+            'modelsCountriesTranslations' => $modelClCountries->countriesTranslations,
         ]);
     }
 
@@ -63,13 +71,51 @@ class ClCountriesController extends Controller
      */
     public function actionCreate()
     {
-        $model = new ClCountries();
+        $modelClCountries = new ClCountries();
+        $modelsCountriesTranslations = [new CountriesTranslations];
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($modelClCountries->load(Yii::$app->request->post())) /*&& $model->save()*/ {
+            $modelsCountriesTranslations = Model::createMultiple(CountriesTranslations::classname());
+            Model::loadMultiple($modelsCountriesTranslations, Yii::$app->request->post());
+
+            // ajax validation
+            if (Yii::$app->request->isAjax) {
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return ArrayHelper::merge(
+                    ActiveForm::validateMultiple($modelsCountriesTranslations),
+                    ActiveForm::validate($modelClCountries)
+                );
+            }
+
+            $valid = $modelClCountries->validate();
+            $valid = Model::validateMultiple($modelsCountriesTranslations) && $valid;
+            if ($valid) {
+                $transaction = \Yii::$app->db->beginTransaction();
+                try {
+                    if ($flag = $modelClCountries->save(false)) {
+
+                        foreach ($modelsCountriesTranslations as $modelCountryTranslation) {
+                            $modelCountryTranslation->country_id = $modelClCountries->id;
+                            if (!($flag = $modelCountryTranslation->save(false))) {
+                                $transaction->rollBack();
+                                break;
+                            }
+                        }
+                    }
+                    if ($flag) {
+                        $transaction->commit();
+                        return $this->redirect(['view', 'id' => $modelClCountries->id]);
+                    }
+                } catch (\Exception $e) {
+                    $transaction->rollBack();
+                }
+            }
+
+
         } else {
             return $this->render('create', [
-                'model' => $model,
+                'modelClCountries' => $modelClCountries,
+                'modelsCountriesTranslations' => (empty($modelsCountriesTranslations)) ? [new CountriesTranslations] : $modelsCountriesTranslations
             ]);
         }
     }
@@ -82,13 +128,13 @@ class ClCountriesController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $modelClCountries = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($modelClCountries->load(Yii::$app->request->post()) && $modelClCountries->save()) {
+            return $this->redirect(['view', 'id' => $modelClCountries->id]);
         } else {
             return $this->render('update', [
-                'model' => $model,
+                'model' => $modelClCountries,
             ]);
         }
     }
@@ -115,8 +161,8 @@ class ClCountriesController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = ClCountries::findOne($id)) !== null) {
-            return $model;
+        if (($modelClCountries = ClCountries::findOne($id)) !== null) {
+            return $modelClCountries;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }

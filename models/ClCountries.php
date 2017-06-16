@@ -59,7 +59,7 @@ class ClCountries extends \yii\db\ActiveRecord
      */
     public function getCountriesTranslations()
     {
-        return $this->hasMany(CountriesTranslations::className(), ['contry_id' => 'id']);
+        return $this->hasMany(CountriesTranslations::className(), ['country_id' => 'id']);
     }
 
     /**

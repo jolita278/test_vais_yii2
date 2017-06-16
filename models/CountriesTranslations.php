@@ -10,11 +10,11 @@ use Yii;
  * @property integer $count
  * @property string $created_at
  * @property string $language_code
- * @property string $contry_id
+ * @property string $country_id
  * @property string $name
  *
  * @property ClLanguages $languageCode
- * @property ClCountries $contry
+ * @property ClCountries $country
  */
 class CountriesTranslations extends \yii\db\ActiveRecord
 {
@@ -50,7 +50,7 @@ class CountriesTranslations extends \yii\db\ActiveRecord
             'count' => Yii::t('app', 'Count'),
             'created_at' => Yii::t('app', 'Created At'),
             'language_code' => Yii::t('app', 'Language Code'),
-            'contry_id' => Yii::t('app', 'Contry ID'),
+            'country_id' => Yii::t('app', 'Country ID'),
             'name' => Yii::t('app', 'Name'),
         ];
     }
@@ -66,8 +66,8 @@ class CountriesTranslations extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getContry()
+    public function getCountry()
     {
-        return $this->hasOne(ClCountries::className(), ['id' => 'contry_id']);
+        return $this->hasOne(ClCountries::className(), ['id' => 'country_id']);
     }
 }
