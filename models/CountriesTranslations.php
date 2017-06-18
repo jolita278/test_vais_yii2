@@ -49,7 +49,7 @@ class CountriesTranslations extends \yii\db\ActiveRecord
         return [
             'count' => Yii::t('app', 'Count'),
             'created_at' => Yii::t('app', 'Created At'),
-            'language_code' => Yii::t('app', 'Language Code'),
+            'language_code' => Yii::t('app', 'Language'),
             'country_id' => Yii::t('app', 'Country ID'),
             'name' => Yii::t('app', 'Name'),
         ];
