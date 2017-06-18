@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $modelClCountries app\models\ClCountries */
+/* @var $model app\models\ClCountries */
 /* @var $modelsCountriesTranslations app\models\CountriesTranslations */
 
 $this->title = Yii::t('app', 'Create Cl Countries');
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?= $this->render('_form', [
-        'modelClCountries' => $modelClCountries,
+        'model' => $model,
         'modelsCountriesTranslations' => $modelsCountriesTranslations,
     ]) ?>
 

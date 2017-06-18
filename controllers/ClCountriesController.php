@@ -5,7 +5,6 @@ namespace app\controllers;
 use app\models\CountriesTranslations;
 use Yii;
 use app\models\ClCountries;
-use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -13,6 +12,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
+use app\base\Model;
 
 /**
  * ClCountriesController implements the CRUD actions for ClCountries model.
@@ -56,11 +56,11 @@ class ClCountriesController extends Controller
      */
     public function actionView($id)
     {
-        $modelClCountries = $this->findModel($id);
+        $model = $this->findModel($id);
 
         return $this->render('view', [
-            'model' => $modelClCountries,
-            'modelsCountriesTranslations' => $modelClCountries->countriesTranslations,
+            'model' => $model,
+            'modelsCountriesTranslations' => $model->countriesTranslations,
         ]);
     }
 
@@ -71,31 +71,32 @@ class ClCountriesController extends Controller
      */
     public function actionCreate()
     {
-        $modelClCountries = new ClCountries();
+        $model = new ClCountries();
         $modelsCountriesTranslations = [new CountriesTranslations];
 
-        if ($modelClCountries->load(Yii::$app->request->post())) /*&& $model->save()*/ {
+        if ($model->load(Yii::$app->request->post())) /*&& $model->save()*/ {
+
             $modelsCountriesTranslations = Model::createMultiple(CountriesTranslations::classname());
             Model::loadMultiple($modelsCountriesTranslations, Yii::$app->request->post());
+
 
             // ajax validation
             if (Yii::$app->request->isAjax) {
                 Yii::$app->response->format = Response::FORMAT_JSON;
                 return ArrayHelper::merge(
                     ActiveForm::validateMultiple($modelsCountriesTranslations),
-                    ActiveForm::validate($modelClCountries)
-                );
+                    ActiveForm::validate($model));
             }
 
-            $valid = $modelClCountries->validate();
+            $valid = $model->validate();
             $valid = Model::validateMultiple($modelsCountriesTranslations) && $valid;
             if ($valid) {
                 $transaction = \Yii::$app->db->beginTransaction();
                 try {
-                    if ($flag = $modelClCountries->save(false)) {
+                    if ($flag = $model->save(false)) {
 
                         foreach ($modelsCountriesTranslations as $modelCountryTranslation) {
-                            $modelCountryTranslation->country_id = $modelClCountries->id;
+                            $modelCountryTranslation->country_id = $model->id;
                             if (!($flag = $modelCountryTranslation->save(false))) {
                                 $transaction->rollBack();
                                 break;
@@ -104,7 +105,7 @@ class ClCountriesController extends Controller
                     }
                     if ($flag) {
                         $transaction->commit();
-                        return $this->redirect(['view', 'id' => $modelClCountries->id]);
+                        return $this->redirect(['view', 'id' => $model->id]);
                     }
                 } catch (\Exception $e) {
                     $transaction->rollBack();
@@ -112,32 +113,79 @@ class ClCountriesController extends Controller
             }
 
 
-        } else {
-            return $this->render('create', [
-                'modelClCountries' => $modelClCountries,
-                'modelsCountriesTranslations' => (empty($modelsCountriesTranslations)) ? [new CountriesTranslations] : $modelsCountriesTranslations
-            ]);
         }
+
+        return $this->render('create', [
+            'model' => $model,
+            'modelsCountriesTranslations' => (empty($modelsCountriesTranslations)) ? [new CountriesTranslations] : $modelsCountriesTranslations
+        ]);
     }
 
+
     /**
-     * Updates an existing ClCountries model.
+     * Updates an existing ClCountries model with connection model CountriesTranslation.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
      * @return mixed
      */
     public function actionUpdate($id)
     {
-        $modelClCountries = $this->findModel($id);
+        $model = $this->findModel($id);
+        $modelsCountriesTranslations = $model->countriesTranslations;
 
-        if ($modelClCountries->load(Yii::$app->request->post()) && $modelClCountries->save()) {
-            return $this->redirect(['view', 'id' => $modelClCountries->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $modelClCountries,
-            ]);
+        if ($model->load(Yii::$app->request->post())) {
+
+            $oldIDs = ArrayHelper::map($modelsCountriesTranslations, 'count', 'count');
+            $modelsCountriesTranslations = Model::createMultiple(CountriesTranslations::classname(), $modelsCountriesTranslations);
+            Model::loadMultiple($modelsCountriesTranslations, Yii::$app->request->post());
+            $deletedIDs = array_diff($oldIDs, array_filter(ArrayHelper::map($modelsCountriesTranslations, 'count', 'count')));
+
+
+            // ajax validation
+            if (Yii::$app->request->isAjax) {
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return ArrayHelper::merge(
+                    ActiveForm::validateMultiple($modelsCountriesTranslations),
+                    ActiveForm::validate($model)
+                );
+            }
+
+            // validate all models
+            $valid = $model->validate();
+            $valid = Model::validateMultiple($modelsCountriesTranslations) && $valid;
+
+            if ($valid) {
+                $transaction = \Yii::$app->db->beginTransaction();
+                try {
+                    if ($flag = $model->save(false)) {
+                        if (!empty($deletedIDs)) {
+                            CountriesTranslations::deleteAll(['count' => $deletedIDs]);
+                        }
+                        foreach ($modelsCountriesTranslations as $modelCountriesTranslations) {
+                            $modelCountriesTranslations->offer_id = $model->id;
+                            if (!($flag = $modelCountriesTranslations->save(false))) {
+                                $transaction->rollBack();
+                                break;
+                            }
+                        }
+                    }
+                    if ($flag) {
+                        $transaction->commit();
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    }
+                } catch (\Exception $e) {
+                    $transaction->rollBack();
+                }
+            }
         }
+
+        return $this->render('update', [
+            'model' => $model,
+            'modelsCountriesTranslations' => (empty($modelsCountriesTranslations)) ? [new CountriesTranslations] : $modelsCountriesTranslations
+        ]);
+
     }
+
 
     /**
      * Deletes an existing ClCountries model.
@@ -161,8 +209,8 @@ class ClCountriesController extends Controller
      */
     protected function findModel($id)
     {
-        if (($modelClCountries = ClCountries::findOne($id)) !== null) {
-            return $modelClCountries;
+        if (($model = ClCountries::findOne($id)) !== null) {
+            return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }

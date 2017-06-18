@@ -7,7 +7,7 @@ use yii\widgets\ActiveForm;
 use wbraganca\dynamicform\DynamicFormWidget;
 
 /* @var $this yii\web\View */
-/* @var $modelClCountries app\models\ClCountries */
+/* @var $model app\models\ClCountries */
 /* @var $form yii\widgets\ActiveForm */
 /* @var $modelsCountriesTranslations app\models\CountriesTranslations */
 ?>
@@ -16,7 +16,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
 
     <?php $form = ActiveForm::begin(['id' => 'dynamic-form']); ?>
 
-    <?= $form->field($modelClCountries, 'id')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'id')->textInput(['maxlength' => true]) ?>
 
     <div class="row">
         <?php DynamicFormWidget::begin([
@@ -32,9 +32,9 @@ use wbraganca\dynamicform\DynamicFormWidget;
             'formFields' => [
                 'name',
                 'language_code',
-
             ],
         ]); ?>
+
         <div class="panel panel-default">
             <div class="panel-heading"><h4></i> Translations </h4>
             </div>
@@ -45,8 +45,8 @@ use wbraganca\dynamicform\DynamicFormWidget;
                     <?php foreach ($modelsCountriesTranslations as $i => $modelCountriesTranslations): ?>
                         <div class="item panel panel-default"><!-- widgetBody -->
                             <div class="panel-heading">
-                                <h3 class="panel-title pull-left">
-                                </h3>
+                                <h3 class="panel-title pull-left">Translation</h3>
+
                                 <div class="pull-right">
                                     <button type="button" class="add-item btn btn-success btn-xs"><i
                                                 class="glyphicon glyphicon-plus"></i></button>
@@ -59,7 +59,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
                                 <?php
                                 // necessary for update action.
                                 if (!$modelCountriesTranslations->isNewRecord) {
-                                    echo Html::activeHiddenInput($modelCountriesTranslations, "[{$i}]id");
+                                    echo Html::activeHiddenInput($modelCountriesTranslations, "[{$i}]count");
                                 }
                                 ?>
 
@@ -72,7 +72,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
                                 </div>
 
                                 <div class="col-sm-6">
-                                    <?= $form->field($modelCountriesTranslations, 'name')->textInput(['maxlength' => true]) ?>
+                                    <?= $form->field($modelCountriesTranslations, "[{$i}]name")->textInput(['maxlength' => true]) ?>
                                 </div>
 
 
@@ -89,7 +89,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
 
 
     <div class="form-group">
-        <?= Html::submitButton($modelClCountries->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $modelClCountries->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
