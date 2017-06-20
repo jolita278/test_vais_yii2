@@ -32,6 +32,10 @@ use wbraganca\dynamicform\DynamicFormWidget;
             'formFields' => [
                 'name',
                 'language_code',
+                'slug',
+                'seo_title',
+                'seo_description',
+                'seo_keywords',
             ],
         ]); ?>
 
@@ -39,7 +43,6 @@ use wbraganca\dynamicform\DynamicFormWidget;
             <div class="panel-heading"><h4></i> Translations </h4>
             </div>
             <div class="panel-body">
-
 
                 <div class="container-items"><!-- widgetContainer -->
                     <?php foreach ($modelsCountriesTranslations as $i => $modelCountriesTranslations): ?>
@@ -62,8 +65,8 @@ use wbraganca\dynamicform\DynamicFormWidget;
                                     echo Html::activeHiddenInput($modelCountriesTranslations, "[{$i}]count");
                                 }
                                 ?>
-
-                                <div class="col-sm-6">
+                                <div class="row">
+                                <div class="col-sm-4">
                                     <?= $form->field($modelCountriesTranslations, "[{$i}]language_code")->dropDownList(
                                         ArrayHelper::map(ClLanguages::find()->all(), 'code', 'name'),
                                         [
@@ -71,10 +74,27 @@ use wbraganca\dynamicform\DynamicFormWidget;
                                         ]) ?>
                                 </div>
 
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     <?= $form->field($modelCountriesTranslations, "[{$i}]name")->textInput(['maxlength' => true]) ?>
                                 </div>
 
+                                <div class="col-sm-4">
+                                    <?= $form->field($modelCountriesTranslations, "[{$i}]slug")->textInput(['maxlength' => true]) ?>
+                                </div>
+                                </div>
+                                <div class="row">
+                                <div class="col-sm-4">
+                                    <?= $form->field($modelCountriesTranslations, "[{$i}]seo_title")->textInput(['maxlength' => true]) ?>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <?= $form->field($modelCountriesTranslations, "[{$i}]seo_description")->textInput(['maxlength' => true]) ?>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <?= $form->field($modelCountriesTranslations, "[{$i}]seo_keywords")->textInput(['maxlength' => true]) ?>
+                                </div>
+                                </div>
 
                             </div>
                         </div>

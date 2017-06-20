@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 
+
 /**
  * This is the model class for table "countries_translations".
  *
@@ -12,6 +13,10 @@ use Yii;
  * @property string $language_code
  * @property string $country_id
  * @property string $name
+ * @property string $slug
+ * @property string $seo_title
+ * @property string $seo_description
+ * @property string $seo_keywords
  *
  * @property ClLanguages $languageCode
  * @property ClCountries $country
@@ -36,6 +41,10 @@ class CountriesTranslations extends \yii\db\ActiveRecord
             [['language_code'], 'string', 'max' => 2],
             [['country_id'], 'string', 'max' => 36],
             [['name'], 'string', 'max' => 255],
+            [['slug'], 'string', 'max' => 255],
+            [['seo_title'], 'string', 'max' => 255],
+            [['seo_description'], 'string', 'max' => 255],
+            [['seo_keywords'], 'string', 'max' => 255],
             [['language_code'], 'exist', 'skipOnError' => true, 'targetClass' => ClLanguages::className(), 'targetAttribute' => ['language_code' => 'code']],
             [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => ClCountries::className(), 'targetAttribute' => ['country_id' => 'id']],
         ];
