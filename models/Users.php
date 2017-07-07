@@ -56,6 +56,8 @@ class Users extends ActiveRecord implements IdentityInterface
             [['remember_token'], 'string', 'max' => 100],
             [['id'], 'unique'],
             [['email'], 'unique'],
+            [['email'], 'email'],
+
         ];
     }
 
