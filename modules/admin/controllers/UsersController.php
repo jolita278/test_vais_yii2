@@ -1,18 +1,19 @@
 <?php
 
-namespace app\controllers;
+namespace app\modules\admin\controllers;
 
+use thamtech\uuid\helpers\UuidHelper;
 use Yii;
-use app\models\ClLanguages;
+use app\models\Users;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ClLanguagesController implements the CRUD actions for ClLanguages model.
+ * UsersController implements the CRUD actions for Users model.
  */
-class ClLanguagesController extends Controller
+class UsersController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,13 +31,13 @@ class ClLanguagesController extends Controller
     }
 
     /**
-     * Lists all ClLanguages models.
+     * Lists all Users models.
      * @return mixed
      */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => ClLanguages::find(),
+            'query' => Users::find(),
         ]);
 
         return $this->render('index', [
@@ -45,8 +46,8 @@ class ClLanguagesController extends Controller
     }
 
     /**
-     * Displays a single ClLanguages model.
-     * @param integer $id
+     * Displays a single Users model.
+     * @param string $id
      * @return mixed
      */
     public function actionView($id)
@@ -57,16 +58,20 @@ class ClLanguagesController extends Controller
     }
 
     /**
-     * Creates a new ClLanguages model.
+     * Creates a new Users model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new ClLanguages();
+        $model = new Users();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->count]);
+        if ($model->load(Yii::$app->request->post())) {([
+            $model['id'] = UuidHelper::uuid(),
+            $model['password'] = md5($model['password']),
+        ]);
+            $model->save();
+            return $this->redirect(['/site/login', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -75,9 +80,9 @@ class ClLanguagesController extends Controller
     }
 
     /**
-     * Updates an existing ClLanguages model.
+     * Updates an existing Users model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
+     * @param string $id
      * @return mixed
      */
     public function actionUpdate($id)
@@ -85,7 +90,7 @@ class ClLanguagesController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->count]);
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -94,9 +99,9 @@ class ClLanguagesController extends Controller
     }
 
     /**
-     * Deletes an existing ClLanguages model.
+     * Deletes an existing Users model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
+     * @param string $id
      * @return mixed
      */
     public function actionDelete($id)
@@ -107,15 +112,15 @@ class ClLanguagesController extends Controller
     }
 
     /**
-     * Finds the ClLanguages model based on its primary key value.
+     * Finds the Users model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return ClLanguages the loaded model
+     * @param string $id
+     * @return Users the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = ClLanguages::findOne($id)) !== null) {
+        if (($model = Users::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

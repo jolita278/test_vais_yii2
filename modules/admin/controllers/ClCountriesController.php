@@ -1,12 +1,14 @@
 <?php
 
-namespace app\controllers;
+namespace app\modules\admin\controllers;
 
 use app\models\CountriesTranslations;
+use thamtech\uuid\helpers\UuidHelper;
 use Yii;
 use app\models\ClCountries;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -40,11 +42,11 @@ class ClCountriesController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => ClCountries::find(),
-        ]);
+        $searchModel = new ClCountriesSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -75,7 +77,7 @@ class ClCountriesController extends Controller
         $modelsCountriesTranslations = [new CountriesTranslations];
 
         if ($model->load(Yii::$app->request->post())) /*&& $model->save()*/ {
-
+            $model['id'] = UuidHelper::uuid();
             $modelsCountriesTranslations = Model::createMultiple(CountriesTranslations::classname());
             Model::loadMultiple($modelsCountriesTranslations, Yii::$app->request->post());
 

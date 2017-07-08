@@ -30,6 +30,11 @@ $this->title = 'My Yii Application';
                 <p><a class="btn btn-default" href="<?=Url::to(['cl-countries/index'])?>">Countries&raquo;</a></p>
             </div>
             <div class="col-lg-4">
+            <h2>Countries</h2>
+
+            <p><a class="btn btn-default" href="<?=Url::to(['users/index'])?>">Users&raquo;</a></p>
+        </div>
+            <div class="col-lg-4">
                 <h2>Heading</h2>
 
                 <p>Lorem ipsum ..</p>

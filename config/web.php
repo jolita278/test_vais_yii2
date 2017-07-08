@@ -8,14 +8,19 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'modules' => [
-        'gridview' =>  [
+        'gridview' => [
             'class' => '\kartik\grid\Module'
             // enter optional module parameters below - only if you need to
             // use your own export download action or custom translation
             // message source
             // 'downloadAction' => 'gridview/export/download',
             // 'i18n' => []
-        ]
+        ],
+
+        'admin' => [
+            'class' => 'app\modules\admin\Module',
+        ],
+
     ],
     'components' => [
         'request' => [
@@ -61,8 +66,15 @@ $config = [
                 '<controller:(post|comment)>s' => '<controller>/index',
             ],
         ],
-
+//        'view' => [
+//            'theme' => [
+//                'pathMap' => [
+//                    '@app/views' => '@app/modules/admin/views'
+//                ],
+//            ],
+//        ],
     ],
+
     'params' => $params,
 ];
 
@@ -71,7 +83,7 @@ if (YII_ENV_DEV) {
     $config['bootstrap'][] = 'debug';
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
-         //uncomment the following to add your IP if you are not connecting from localhost.
+        //uncomment the following to add your IP if you are not connecting from localhost.
         'allowedIPs' => ['127.0.0.1', '::1', '**',],
     ];
 

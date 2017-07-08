@@ -19,7 +19,11 @@
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0",
         "thamtech/yii2-uuid": "^1.0",
-        "wbraganca/yii2-dynamicform": "*"
+        "wbraganca/yii2-dynamicform": "*",
+        "kartik-v/yii2-widget-select2": "@dev",
+        "kartik-v/yii2-grid": "@dev",
+        "dmstr/yii2-adminlte-asset": "2.*",
+        "yii2mod/yii2-rbac": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
