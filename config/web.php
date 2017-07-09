@@ -20,9 +20,34 @@ $config = [
         'admin' => [
             'class' => 'app\modules\admin\Module',
         ],
+        'rbac' => [
+            'class' => 'mdm\admin\Module',
+            'controllerMap' => [
+                'assignment' => [
+                    'class' => 'mdm\admin\controllers\AssignmentController',
+                    /* 'userClassName' => 'app\models\User', */
+                    'idField' => 'id',
+                    'usernameField' => 'username',
+                ],
+            ],
+            'layout' => 'left-menu',
+            'mainLayout' => '@app/views/layouts/admin.php',
+        ]
+    ],
+    'as access' => [
+        'class' => 'mdm\admin\components\AccessControl',
+        'allowActions' => [
+            'site/*',
+//            'admin/*',
+//            'rbac/*',
+//            'logged-user/*',
 
+        ]
     ],
     'components' => [
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager', // or use 'yii\rbac\DbManager'
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'BqUKYG3XWCPa_Ov7dPT9qc7WuWpPOahI',
@@ -31,9 +56,8 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\Users',
-            'enableAutoLogin' => false,//If you don't have authKey column in your DB, set enableAutoLogin field to false
-            'enableSession' => true,
+            'identityClass' => 'mdm\admin\models\User',
+            'loginUrl' => ['rbac/user/login'],
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -66,13 +90,13 @@ $config = [
                 '<controller:(post|comment)>s' => '<controller>/index',
             ],
         ],
-//        'view' => [
-//            'theme' => [
-//                'pathMap' => [
-//                    '@app/views' => '@app/modules/admin/views'
-//                ],
-//            ],
-//        ],
+        'view' => [
+            'theme' => [
+                'pathMap' => [
+                    '@app/views' => '@app/modules/admin/views'
+                ],
+            ],
+        ],
     ],
 
     'params' => $params,

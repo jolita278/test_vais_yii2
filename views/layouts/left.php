@@ -34,12 +34,12 @@
                     ['label' => 'Gii', 'icon' => 'file-code-o', 'url' => ['/gii']],
                     ['label' => 'Debug', 'icon' => 'dashboard', 'url' => ['/debug']],
                     [
-                        'label' => 'Same tools',
+                        'label' => 'Services',
                         'icon' => 'share',
                         'url' => '#',
                         'items' => [
                             ['label' => 'Languages', 'icon' => 'file-code-o', 'url' => ['cl-languages/index'],],
-                            ['label' => 'Debug', 'icon' => 'dashboard', 'url' => ['/debug'],],
+                            ['label' => 'Vartotojų nustatymai', 'icon' => 'file-code-o', 'url' => ['default/index'],],
                             [
                                 'label' => 'Level One',
                                 'icon' => 'circle-o',
